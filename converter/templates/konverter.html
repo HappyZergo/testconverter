@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <title>Converter</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+</head>
+<body>
+<span class="d-block p-2 bg-primary text-white">Конвертер римских чисел</span>
+
+
+<form action="{% url 'converter_url' %}" id="formconverter" method="post">
+    {% csrf_token %}
+    <label for="exampleFormControlTextarea1">Введите Римское или арабское число</label>
+    {% for fields in form %}
+        {% if fields.errors %}
+            <div class="alert alert-danger">
+                {{ fields.errors }}
+            </div>
+        {% endif %}
+
+        {{ fields }}
+
+    {% endfor %}
+    <button type="submit" class="btn btn-primary" id="submitform">convert</button>
+    <div class="form-group">
+        <input class="form-control mt-1 col-md-4" type="text" value="{{ n }}" id="converted_number">
+    </div>
+
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#submitform").click(function (e) {
+            var MyForm = JSON.stringify($("#formconverter").serializeJSON());
+            console.log(MyForm);
+            $.ajax(
+                {
+                    url: "{% url 'converter_url' %}",
+                    type: "POST",
+                    data: {convertible_number: $('#convertible_number').val()}
+                });
+            e.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>
